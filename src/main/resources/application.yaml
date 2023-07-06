@@ -1,0 +1,21 @@
+spring:
+    profiles:
+        active: dev
+    data:
+        mongodb:
+            host: louisemongodb
+            port: 27017
+
+openai:
+    api:
+        key: ${OPENAI_API_KEY}
+        url: https://api.openai.com/v1/chat/completions
+    model: gpt-3.5-turbo
+    temperature: 0.7
+    message:
+        role: user
+
+---
+spring:
+    profiles:
+        active: test

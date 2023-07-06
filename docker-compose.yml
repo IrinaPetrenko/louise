@@ -1,0 +1,21 @@
+services:
+  louise:
+    build:
+      context: .
+    container_name: "louise"
+    ports:
+      - 8080:8080
+    links:
+      - louisemongodb
+    env_file:
+      - .env
+  louisemongodb:
+    image: mongo
+    container_name: "louisemongodb"
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+volumes:
+  mongo-data:
+    external: true
