@@ -42,7 +42,7 @@ GET http://127.0.0.1:8080/java/quiz/random
 POST http://127.0.0.1:8080/java/quiz/answer
 {
     "questionId": 1,
-    "userAnswer": "This is an anonymous function. They used to make code more flexible and can be created without instantiating class object."
+    "userAnswer": "your answer"
 }
 ```
 
