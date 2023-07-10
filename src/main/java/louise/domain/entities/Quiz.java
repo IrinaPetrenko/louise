@@ -4,7 +4,6 @@ import lombok.*;
 
 @Data
 @AllArgsConstructor
-@RequiredArgsConstructor
 @NoArgsConstructor
 public class Quiz {
     private long id;

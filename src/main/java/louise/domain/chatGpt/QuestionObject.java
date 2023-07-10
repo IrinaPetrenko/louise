@@ -4,7 +4,6 @@ import lombok.Data;
 
 import java.util.List;
 
-//@Accessors(fluent = true)
 @Data
 public class QuestionObject {
     private String model;

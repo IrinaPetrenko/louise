@@ -2,7 +2,7 @@ package louise.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import louise.MongoTestSetup;
-import louise.domain.GptFactory;
+import louise.domain.GptHandler;
 import louise.domain.entities.Quiz;
 import louise.exceptions.QuestionException;
 import louise.handler.entity.QuizHandlerObject;
@@ -34,7 +34,7 @@ public class JavaQuizHandlerTest extends MongoTestSetup {
     private QuizRepository quizRepository;
 
     @MockBean
-    private GptFactory gptFactory;
+    private GptHandler gptHandler;
 
     @Test
     public void testCreateQuiz() {
@@ -44,7 +44,7 @@ public class JavaQuizHandlerTest extends MongoTestSetup {
         QuizHandlerObject quiz = new QuizHandlerObject();
         quiz.setQuestion(expectedQuestion);
 
-        doAnswer(invocationOnMock -> expectedAnswer).when(gptFactory).request(quiz);
+        doAnswer(invocationOnMock -> expectedAnswer).when(gptHandler).request(quiz);
 
         Quiz actualQuiz = javaQuizHandler.create(quiz);
         Assertions.assertEquals(expectedQuestion, actualQuiz.getQuestion());
@@ -101,7 +101,7 @@ public class JavaQuizHandlerTest extends MongoTestSetup {
         checkQuiz.setQuestion(createdQuiz.getQuestion());
         checkQuiz.setUserAnswer(userAnswer);
 
-        doAnswer(invocationOnMock -> gptAnswer).when(gptFactory).request(checkQuiz);
+        doAnswer(invocationOnMock -> gptAnswer).when(gptHandler).request(checkQuiz);
         Assertions.assertEquals(gptAnswer, javaQuizHandler.checkAnswer(checkQuiz));
     }
 
@@ -113,7 +113,7 @@ public class JavaQuizHandlerTest extends MongoTestSetup {
         QuizHandlerObject quiz = new QuizHandlerObject();
         quiz.setQuestion(expectedQuestion);
 
-        doAnswer(invocationOnMock -> expectedAnswer).when(gptFactory).request(quiz);
+        doAnswer(invocationOnMock -> expectedAnswer).when(gptHandler).request(quiz);
 
         return javaQuizHandler.create(quiz);
     }
@@ -121,6 +121,6 @@ public class JavaQuizHandlerTest extends MongoTestSetup {
     @AfterEach
     public void wrap() {
         quizRepository.deleteAll();
-        reset(gptFactory);
+        reset(gptHandler);
     }
 }

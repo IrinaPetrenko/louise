@@ -1,14 +1,13 @@
 package louise.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import louise.controller.models.CheckRequest;
 import louise.controller.models.CheckResponse;
 import louise.controller.models.QuestionRequest;
 import louise.controller.models.QuizResponse;
-import louise.handler.QuizHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import louise.handler.QuizHandlerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,13 +16,11 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("/{language}/quiz")
+@RequiredArgsConstructor
 public class QuizController {
 
-    @Autowired
-    private ResponseConverter responseConverter;
-    @Autowired
-    @Qualifier("quizHandlerFactory")
-    private QuizHandler handler;
+    private final ResponseConverter responseConverter;
+    private final QuizHandlerFactory handler;
 
     @GetMapping("/random")
     public QuizResponse getRandomQuestion(@PathVariable String language) {

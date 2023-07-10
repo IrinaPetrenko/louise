@@ -1,18 +1,16 @@
 package louise.handler;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import louise.exceptions.LanguageException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class QuizHandlerFactory implements QuizHandler {
+@RequiredArgsConstructor
+public class QuizHandlerFactory {
+    private final JavaQuizHandler javaQuizHandler;
 
-    @Autowired
-    private JavaQuizHandler javaQuizHandler;
-
-    @Override
     public QuizInterface getHandler(String language) {
         if ("java".equals(language)) {
             return new QuizHandlerDecorator(javaQuizHandler);

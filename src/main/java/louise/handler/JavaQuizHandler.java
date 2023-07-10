@@ -1,57 +1,54 @@
 package louise.handler;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import louise.domain.GptFactory;
+import louise.domain.GptHandler;
 import louise.domain.QuizConverter;
 import louise.domain.entities.Quiz;
 import louise.exceptions.QuestionException;
 import louise.handler.entity.QuizHandlerObject;
-import louise.repository.RepositoryFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import louise.repository.DocumentService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class JavaQuizHandler implements QuizInterface<QuizHandlerObject, QuizHandlerObject> {
-
-    @Autowired
-    private QuizConverter quizConverter;
-    @Autowired
-    private RepositoryFactory repositoryFactory;
-    @Autowired
-    private GptFactory gptFactory;
+    private final QuizConverter quizConverter;
+    private final DocumentService documentService;
+    private final GptHandler gptHandler;
 
     @Override
     public Quiz getRandom() {
-        return quizConverter.convert(repositoryFactory.getRandom());
+        return quizConverter.convert(documentService.getRandom());
     }
 
     @Override
     public Quiz create(QuizHandlerObject request) throws QuestionException {
-        repositoryFactory.checkQuizAlreadyExists(request.getQuestion());
-        return quizConverter.convert(repositoryFactory.save(
+        documentService.checkQuizAlreadyExists(request.getQuestion());
+        return quizConverter.convert(documentService.save(
                         request.getQuestion(),
-                        gptFactory.request(request)
+                        gptHandler.request(request)
                 )
         );
     }
 
     @Override
     public void delete(long id) {
-        repositoryFactory.checkAndGetQuiz(id);
-        repositoryFactory.delete(id);
+        documentService.checkAndGetQuiz(id);
+        documentService.delete(id);
     }
 
     @Override
     public List<Quiz> getAll() {
-        return repositoryFactory.findAll().stream().map(quizConverter::convert).toList();
+        return documentService.findAll().stream().map(quizConverter::convert).toList();
     }
 
     @Override
     public String checkAnswer(QuizHandlerObject request) {
-        repositoryFactory.checkAndGetQuiz(request.getQuestionId());
-        return gptFactory.request(request);
+        documentService.checkAndGetQuiz(request.getQuestionId());
+        return gptHandler.request(request);
     }
 }
