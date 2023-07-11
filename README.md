@@ -1,6 +1,6 @@
 # louise
 
-Louise ss a Pet project to train programing language quizes (currently only *java* is supported).
+Louise is a Pet project to train programing language quizes (currently only *java* is supported).
 
 You can add any new question to the quiz, select random quiz and test your answer on it.
 
