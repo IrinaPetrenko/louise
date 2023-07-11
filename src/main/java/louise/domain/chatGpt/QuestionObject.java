@@ -1,12 +1,12 @@
 package louise.domain.chatGpt;
 
-import lombok.Data;
+import lombok.Value;
 
 import java.util.List;
 
-@Data
+@Value
 public class QuestionObject {
-    private String model;
-    private List<Message> messages;
-    private Double temperature;
+    String model;
+    List<Message> messages;
+    Double temperature;
 }

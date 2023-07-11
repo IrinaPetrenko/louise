@@ -6,6 +6,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.RestClientResponseException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,5 +33,10 @@ public class ControllerExceptionsHandler {
     @ExceptionHandler(LanguageException.class)
     public ResponseEntity<CustomException> handleLanguageNotSupportedException(LanguageException exception) {
         return new ResponseEntity<>(new CustomException(exception.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RestClientResponseException.class)
+    public ResponseEntity<String> handleChatGptException(RestClientResponseException exception) {
+        return new ResponseEntity<>(exception.getMessage(), exception.getStatusCode());
     }
 }

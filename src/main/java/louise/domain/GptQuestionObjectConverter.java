@@ -12,19 +12,19 @@ import java.util.Arrays;
 @Service
 public class GptQuestionObjectConverter {
     public QuestionObject convert(QuestionRequest questionRequest, ChatGptProps props) {
-        QuestionObject questionObj = new QuestionObject();
-        questionObj.setMessages(new ArrayList<>(Arrays.asList(new Message(questionRequest.getQuestion(), props))));
-        questionObj.setModel(props.getModel());
-        questionObj.setTemperature(props.getTemperature());
-        return questionObj;
+        return new QuestionObject(
+                props.getModel(),
+                new ArrayList<>(Arrays.asList(new Message(questionRequest.getQuestion(), props))),
+                props.getTemperature()
+        );
     }
 
     public QuestionObject convert(String question, ChatGptProps props) {
-        QuestionObject questionObj = new QuestionObject();
-        questionObj.setMessages(new ArrayList<>(Arrays.asList(new Message(question, props))));
-        questionObj.setModel(props.getModel());
-        questionObj.setTemperature(props.getTemperature());
-        return questionObj;
+        return new QuestionObject(
+                props.getModel(),
+                new ArrayList<>(Arrays.asList(new Message(question, props))),
+                props.getTemperature()
+        );
     }
 
 }

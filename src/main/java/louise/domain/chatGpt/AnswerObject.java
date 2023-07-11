@@ -1,20 +1,25 @@
 package louise.domain.chatGpt;
 
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Value;
 
 import java.util.List;
 
-@Data
+@Value
+@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class AnswerObject {
 
-    private String id;
+    String id;
 
-    private String object;
+    String object;
 
-    private Long created;
+    Long created;
 
-    private String model;
+    String model;
 
-    private List<Choice> choices;
+    List<Choice> choices;
 
 }

@@ -1,16 +1,21 @@
 package louise.domain.chatGpt;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Value;
 
-@Data
+@Value
+@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class Choice {
 
-    private Message message;
+    Message message;
 
     @JsonProperty("finish_reason")
-    private String finishReason;
+    String finishReason;
 
-    private Integer index;
+    Integer index;
 
 }

@@ -14,7 +14,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 public class TestSetup extends MongoTestSetup {
@@ -33,7 +33,7 @@ public class TestSetup extends MongoTestSetup {
 
     @AfterEach
     public void wrap() {
-        log.info("Reseting mock for Gpt...");
+        log.info("Resetting mock for Gpt...");
         Mockito.reset(mockGptProps);
     }
 
@@ -42,29 +42,29 @@ public class TestSetup extends MongoTestSetup {
     }
 
     protected QuestionObject buildQuestionObject(String content) {
-        QuestionObject question = new QuestionObject();
-        question.setModel(mockGptProps.getModel());
-        question.setMessages(Arrays.asList(new Message(content, mockGptProps)));
-        question.setTemperature(mockGptProps.getTemperature());
-        return question;
+        return new QuestionObject(
+                mockGptProps.getModel(),
+                List.of(new Message(content, mockGptProps)),
+                mockGptProps.getTemperature()
+        );
     }
 
     protected AnswerObject buildAnswerObject(String answer) {
-        AnswerObject answerObject = new AnswerObject();
-        answerObject.setObject("object");
-        answerObject.setId("234332");
-        answerObject.setModel(mockGptProps.getModel());
-        answerObject.setCreated((long) 23090293);
-        answerObject.setChoices(Arrays.asList(buildChoice(answer)));
-        return answerObject;
+        return new AnswerObject(
+                "234332",
+                "object",
+                (long) 23090293,
+                mockGptProps.getModel(),
+                List.of(buildChoice(answer))
+        );
     }
 
     protected Choice buildChoice(String answer) {
-        Choice choice = new Choice();
-        choice.setFinishReason("test");
-        choice.setIndex(7);
-        choice.setMessage(new Message(answer, mockGptProps));
-        return choice;
+        return new Choice(
+                new Message(answer, mockGptProps),
+                "test",
+                7
+        );
     }
 
     protected QuizHandlerObject buildQuizHandler(String question) {
