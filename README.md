@@ -10,7 +10,7 @@ You can add any new question to the quiz, select random quiz and test your answe
 - run ```docker compose up```;
 
 *To run tests:*
-- ```mvn test```;
+- ```mvn test``` or ```./mvnw test```;
 
 **Request examples from Postman:**
 
