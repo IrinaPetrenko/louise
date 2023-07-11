@@ -43,7 +43,7 @@ public class GptHandler {
 
 
     private QuestionObject prepareRequest(long quizId, String userAnswer) {
-        Document quiz = documentService.checkAndGetQuiz(quizId);
+        Document quiz = documentService.findBy(quizId);
         String message = prepMessage(quiz.getQuestion(), quiz.getAnswer(), userAnswer);
         return gptQuestionObjectConverter.convert(message, connectionProps);
     }

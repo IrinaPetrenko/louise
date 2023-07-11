@@ -78,7 +78,7 @@ public class GptHelperTest extends TestSetup {
 
         doAnswer(invocation -> buildAnswerObject(expectedGptAnswer)).when(restTemplate).postForObject(eq(url),
                 any(), any());
-        doAnswer(invocation -> new Document(quizId, testQuestion, testAnswer)).when(documentService).checkAndGetQuiz(quizId);
+        doAnswer(invocation -> new Document(quizId, testQuestion, testAnswer)).when(documentService).findBy(quizId);
 
         String actualAnswer = gptHandler.request(buildQuizHandler(testQuestion, quizId, userAnswer));
         Assert.assertEquals(expectedGptAnswer, actualAnswer);
@@ -88,7 +88,7 @@ public class GptHelperTest extends TestSetup {
     public void testQuestionWithUserAnswerQuizNotFound() {
         doAnswer(invocation -> {
             throw new QuestionException("test exception");
-        }).when(documentService).checkAndGetQuiz((long) 123456);
+        }).when(documentService).findBy((long) 123456);
 
         Assert.assertThrows(QuestionException.class, () -> {
             gptHandler.request(buildQuizHandler(testQuestion, 123456, "Java is cool"));
@@ -99,7 +99,7 @@ public class GptHelperTest extends TestSetup {
     public void testQuestionWithUserAnswerAndEmptyGptRequest() {
         doAnswer(invocation -> buildAnswerObject("")).when(restTemplate).postForObject(eq(url),
                 any(), any());
-        doAnswer(invocation -> new Document(123456, testQuestion, testAnswer)).when(documentService).checkAndGetQuiz(123456);
+        doAnswer(invocation -> new Document(123456, testQuestion, testAnswer)).when(documentService).findBy(123456);
 
         String actualAnswer = gptHandler.request(buildQuizHandler(testQuestion, 123456, "Java is cool"));
         Assert.assertEquals("", actualAnswer);

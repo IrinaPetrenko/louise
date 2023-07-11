@@ -27,7 +27,7 @@ public class JavaQuizHandler implements QuizInterface<QuizHandlerObject, QuizHan
 
     @Override
     public Quiz create(QuizHandlerObject request) throws QuestionException {
-        documentService.checkQuizAlreadyExists(request.getQuestion());
+        documentService.existsBy(request.getQuestion());
         return quizConverter.convert(documentService.save(
                         request.getQuestion(),
                         gptHandler.request(request)
@@ -37,7 +37,7 @@ public class JavaQuizHandler implements QuizInterface<QuizHandlerObject, QuizHan
 
     @Override
     public void delete(long id) {
-        documentService.checkAndGetQuiz(id);
+        documentService.findBy(id);
         documentService.delete(id);
     }
 
@@ -48,7 +48,12 @@ public class JavaQuizHandler implements QuizInterface<QuizHandlerObject, QuizHan
 
     @Override
     public String checkAnswer(QuizHandlerObject request) {
-        documentService.checkAndGetQuiz(request.getQuestionId());
+        documentService.findBy(request.getQuestionId());
         return gptHandler.request(request);
+    }
+
+    @Override
+    public Languages getLanguage() {
+        return Languages.JAVA;
     }
 }

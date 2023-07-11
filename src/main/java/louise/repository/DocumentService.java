@@ -15,7 +15,7 @@ import java.util.Random;
 public class DocumentService {
     private final DocumentConverter documentConverter;
     private final QuizRepository quizRepository;
-    public void checkQuizAlreadyExists(String question) {
+    public void existsBy(String question) {
         Optional.ofNullable(quizRepository.findByQuestion(question)).ifPresentOrElse(
                 (value) -> {
                     throw new QuestionException("Such question already exists");
@@ -24,7 +24,7 @@ public class DocumentService {
         );
     }
 
-    public Document checkAndGetQuiz(long id) {
+    public Document findBy(long id) {
         return quizRepository.findById(id).orElseThrow(() -> new QuestionException("Quiz not found. Check provided id"));
     }
 

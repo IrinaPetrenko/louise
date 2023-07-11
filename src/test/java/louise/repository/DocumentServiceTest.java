@@ -30,7 +30,7 @@ public class DocumentServiceTest extends MongoTestSetup {
     public void testCheckQuizAlreadyExists() {
         String question = "test";
 
-        Assertions.assertDoesNotThrow(() -> documentService.checkQuizAlreadyExists(question));
+        Assertions.assertDoesNotThrow(() -> documentService.existsBy(question));
     }
 
     @Test
@@ -40,7 +40,7 @@ public class DocumentServiceTest extends MongoTestSetup {
 
         quizRepository.save(new Document(id, question, null));
 
-        Assertions.assertThrows(QuestionException.class, () -> documentService.checkQuizAlreadyExists(question));
+        Assertions.assertThrows(QuestionException.class, () -> documentService.existsBy(question));
     }
 
     @Test
@@ -53,14 +53,14 @@ public class DocumentServiceTest extends MongoTestSetup {
         expectedDoc.setId(id);
 
         quizRepository.save(new Document(id, question, null));
-        Assertions.assertEquals(expectedDoc, documentService.checkAndGetQuiz(id));
+        Assertions.assertEquals(expectedDoc, documentService.findBy(id));
     }
 
     @Test
     public void testCheckAndGetQuizNotFound() {
         long id = 12345;
 
-        Assertions.assertThrows(QuestionException.class, () -> documentService.checkAndGetQuiz(id));
+        Assertions.assertThrows(QuestionException.class, () -> documentService.findBy(id));
     }
 
     @Test
@@ -155,8 +155,8 @@ public class DocumentServiceTest extends MongoTestSetup {
         quizRepository.save(doc1);
         quizRepository.save(doc2);
         Assertions.assertEquals(2, documentService.findAll().size());
-        Assertions.assertEquals(doc1, documentService.checkAndGetQuiz(id1));
-        Assertions.assertEquals(doc2, documentService.checkAndGetQuiz(id2));
+        Assertions.assertEquals(doc1, documentService.findBy(id1));
+        Assertions.assertEquals(doc2, documentService.findBy(id2));
     }
 
     @Test
