@@ -5,11 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import louise.configuration.ChatGptProps;
 import louise.domain.chatGpt.AnswerObject;
 import louise.domain.chatGpt.QuestionObject;
+import louise.exceptions.ChatGptException;
 import louise.handler.entity.QuizHandlerObject;
 import louise.repository.Document;
 import louise.repository.DocumentService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.NoSuchElementException;
@@ -36,9 +38,13 @@ public class GptHandler {
     }
 
     private String execute(QuestionObject request) {
-        AnswerObject answer = openaiRestTemplate.postForObject(connectionProps.getUrl(), request, AnswerObject.class);
-        Optional.ofNullable(answer.getChoices()).orElseThrow(NoSuchElementException::new);
-        return answer.getChoices().get(0).getMessage().getContent();
+        try {
+            AnswerObject answer = openaiRestTemplate.postForObject(connectionProps.getUrl(), request, AnswerObject.class);
+            Optional.ofNullable(answer.getChoices()).orElseThrow(NoSuchElementException::new);
+            return answer.getChoices().get(0).getMessage().getContent();
+        } catch (RestClientResponseException exception) {
+            throw new ChatGptException(exception);
+        }
     }
 
 

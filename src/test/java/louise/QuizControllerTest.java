@@ -7,6 +7,7 @@ import louise.controller.models.CheckResponse;
 import louise.controller.models.QuestionRequest;
 import louise.controller.models.QuizResponse;
 import louise.domain.GptHandler;
+import louise.exceptions.ChatGptException;
 import louise.exceptions.CustomException;
 import louise.exceptions.QuestionException;
 import louise.repository.QuizRepository;
@@ -17,10 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.client.RestClientResponseException;
 import org.testcontainers.shaded.com.fasterxml.jackson.core.type.TypeReference;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -29,6 +32,7 @@ import java.util.Random;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -209,6 +213,30 @@ public class QuizControllerTest extends TestSetup {
                 });
     }
 
+    @SneakyThrows
+    @Test
+    public void testChatGptException() {
+        QuestionRequest request = new QuestionRequest("what is Exception?");
+
+        RestClientResponseException clientException = new RestClientResponseException(
+                "test exception",
+                HttpStatusCode.valueOf(401),
+                "Unauthorized",
+                null,
+                null,
+                null
+        );
+        ChatGptException exception = new ChatGptException(clientException);
+
+        when(gptHandler.request(any())).thenThrow(exception);
+
+        this.mockMvc.perform(
+                MockMvcRequestBuilders
+                        .post("/java/quiz/new")
+                        .content(new ObjectMapper().writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().is(401));
+    }
 
     @SneakyThrows
     private QuizResponse createQuiz() {
@@ -229,6 +257,7 @@ public class QuizControllerTest extends TestSetup {
 
         return new ObjectMapper().readValue(result.getResponse().getContentAsString(), QuizResponse.class);
     }
+
 
     private CheckRequest prepCheckRequest(long quizId) {
         return new CheckRequest(quizId, "This is test User Answer");
