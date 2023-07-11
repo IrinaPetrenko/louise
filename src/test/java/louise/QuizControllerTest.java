@@ -61,13 +61,9 @@ public class QuizControllerTest extends TestSetup {
 
         doAnswer(invocationOnMock -> answer).when(gptHandler).request(any());
 
-        QuestionRequest request = new QuestionRequest();
-        request.setQuestion(question);
+        QuestionRequest request = new QuestionRequest(question);
 
-        QuizResponse expectedResponse = new QuizResponse();
-        expectedResponse.setQuestion(question);
-        expectedResponse.setId(123234);
-        expectedResponse.setAnswer(answer);
+        QuizResponse expectedResponse = new QuizResponse(123234, question, answer);
 
         this.mockMvc.perform(MockMvcRequestBuilders
                         .post("/java/quiz/new")
@@ -84,8 +80,7 @@ public class QuizControllerTest extends TestSetup {
     @SneakyThrows
     @Test
     public void testCreateNewQuizBadFormat() {
-        QuestionRequest request = new QuestionRequest();
-        request.setQuestion("");
+        QuestionRequest request = new QuestionRequest("");
 
         this.mockMvc.perform(MockMvcRequestBuilders
                 .post("/java/quiz/new")
@@ -209,8 +204,7 @@ public class QuizControllerTest extends TestSetup {
                 .andExpect(result -> {
                     CheckResponse actualResponse = new ObjectMapper().readValue(result.getResponse().getContentAsString(),
                             CheckResponse.class);
-                    CheckResponse expectedResponse = new CheckResponse();
-                    expectedResponse.setResponse(createdQuiz.getAnswer());
+                    CheckResponse expectedResponse = new CheckResponse(createdQuiz.getAnswer());
                     Assertions.assertEquals(expectedResponse, actualResponse);
                 });
     }
@@ -224,8 +218,7 @@ public class QuizControllerTest extends TestSetup {
 
         doAnswer(invocationOnMock -> answer).when(gptHandler).request(any());
 
-        QuestionRequest request = new QuestionRequest();
-        request.setQuestion(question);
+        QuestionRequest request = new QuestionRequest(question);
 
         MvcResult result = this.mockMvc.perform(MockMvcRequestBuilders
                         .post("/java/quiz/new")
@@ -238,10 +231,6 @@ public class QuizControllerTest extends TestSetup {
     }
 
     private CheckRequest prepCheckRequest(long quizId) {
-        CheckRequest checkRequest = new CheckRequest();
-        checkRequest.setQuestionId(quizId);
-        checkRequest.setUserAnswer("This is test User Answer");
-
-        return checkRequest;
+        return new CheckRequest(quizId, "This is test User Answer");
     }
 }

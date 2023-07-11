@@ -2,16 +2,15 @@ package louise.domain.entities;
 
 import lombok.*;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Value
+//@NoArgsConstructor
 public class Quiz {
-    private long id;
+    long id;
     @NonNull
-    private String question;
+    String question;
 
-    private String answer;
+    String answer;
 
-    private String userAnswer;
+    String userAnswer;
 
 }

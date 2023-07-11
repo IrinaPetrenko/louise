@@ -7,10 +7,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class QuizConverter {
     public Quiz convert(Document document) {
-        Quiz quiz = new Quiz();
-        quiz.setId(document.getId());
-        quiz.setQuestion(document.getQuestion());
-        quiz.setAnswer(document.getAnswer());
-        return quiz;
+        return new Quiz(document.getId(), document.getQuestion(), document.getAnswer(), null);
     }
 }

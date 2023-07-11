@@ -1,15 +1,15 @@
 package louise.handler.entity;
 
 import jakarta.annotation.Nullable;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class QuizHandlerObject {
 
     @Nullable
-    private String question;
+    String question;
     @Nullable
-    private long questionId;
+    Long questionId;
     @Nullable
-    private String userAnswer;
+    String userAnswer;
 }

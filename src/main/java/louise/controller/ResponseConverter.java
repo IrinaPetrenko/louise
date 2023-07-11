@@ -12,19 +12,11 @@ import java.util.List;
 public class ResponseConverter {
 
     public QuizResponse convert(Quiz quiz) {
-        QuizResponse quizResponse = new QuizResponse();
-        quizResponse.setId(quiz.getId());
-        quizResponse.setAnswer(quiz.getAnswer());
-        quizResponse.setQuestion(quiz.getQuestion());
-        return quizResponse;
+        return new QuizResponse(quiz.getId(), quiz.getQuestion(), quiz.getAnswer());
     }
 
     public QuizResponse convert(Document document) {
-        QuizResponse quizResponse = new QuizResponse();
-        quizResponse.setId(document.getId());
-        quizResponse.setQuestion(document.getQuestion());
-        quizResponse.setAnswer(document.getAnswer());
-        return quizResponse;
+        return new QuizResponse(document.getId(), document.getQuestion(), document.getAnswer());
     }
 
     public List<QuizResponse> convert(List<Quiz> quizList) {
@@ -32,8 +24,6 @@ public class ResponseConverter {
     }
 
     public CheckResponse convert(String evaluation) {
-        CheckResponse response = new CheckResponse();
-        response.setResponse(evaluation);
-        return response;
+        return new CheckResponse(evaluation);
     }
 }

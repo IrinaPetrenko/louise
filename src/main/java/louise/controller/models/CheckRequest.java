@@ -1,12 +1,12 @@
 package louise.controller.models;
 
 import jakarta.validation.constraints.Min;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class CheckRequest {
     @Min(4)
-    private long questionId;
-    private String userAnswer;
+    long questionId;
+    String userAnswer;
 
 }

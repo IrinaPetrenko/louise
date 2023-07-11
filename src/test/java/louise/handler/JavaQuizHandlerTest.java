@@ -41,8 +41,7 @@ public class JavaQuizHandlerTest extends MongoTestSetup {
         String expectedQuestion = "test Q";
         String expectedAnswer = "test A";
 
-        QuizHandlerObject quiz = new QuizHandlerObject();
-        quiz.setQuestion(expectedQuestion);
+        QuizHandlerObject quiz = new QuizHandlerObject(expectedQuestion, null, null);
 
         doAnswer(invocationOnMock -> expectedAnswer).when(gptHandler).request(quiz);
 
@@ -55,8 +54,7 @@ public class JavaQuizHandlerTest extends MongoTestSetup {
     public void testCreatingDuplicateQuestion() {
         Quiz createdQuiz = createQuiz();
 
-        QuizHandlerObject quiz = new QuizHandlerObject();
-        quiz.setQuestion(createdQuiz.getQuestion());
+        QuizHandlerObject quiz = new QuizHandlerObject(createdQuiz.getQuestion(), null, null);
 
         Assertions.assertThrows(QuestionException.class, () -> {
             javaQuizHandler.create(quiz);
@@ -96,10 +94,7 @@ public class JavaQuizHandlerTest extends MongoTestSetup {
 
         String userAnswer = "This is mock User answer";
         String gptAnswer = "This is Mock. Test User answer is correct";
-        QuizHandlerObject checkQuiz = new QuizHandlerObject();
-        checkQuiz.setQuestionId(createdQuiz.getId());
-        checkQuiz.setQuestion(createdQuiz.getQuestion());
-        checkQuiz.setUserAnswer(userAnswer);
+        QuizHandlerObject checkQuiz = new QuizHandlerObject(createdQuiz.getQuestion(), createdQuiz.getId(), userAnswer);
 
         doAnswer(invocationOnMock -> gptAnswer).when(gptHandler).request(checkQuiz);
         Assertions.assertEquals(gptAnswer, javaQuizHandler.checkAnswer(checkQuiz));
@@ -110,8 +105,7 @@ public class JavaQuizHandlerTest extends MongoTestSetup {
         String expectedQuestion = "test Q" + random.nextInt();
         String expectedAnswer = "test A" + random.nextInt();
 
-        QuizHandlerObject quiz = new QuizHandlerObject();
-        quiz.setQuestion(expectedQuestion);
+        QuizHandlerObject quiz = new QuizHandlerObject(expectedQuestion, null, null);
 
         doAnswer(invocationOnMock -> expectedAnswer).when(gptHandler).request(quiz);
 

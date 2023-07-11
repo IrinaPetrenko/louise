@@ -7,15 +7,10 @@ import louise.handler.entity.QuizHandlerObject;
 public class QuizHandlerConverter {
 
     public static QuizHandlerObject convert(QuestionRequest questionRequest) {
-        QuizHandlerObject quizHandler = new QuizHandlerObject();
-        quizHandler.setQuestion(questionRequest.getQuestion());
-        return quizHandler;
+        return new QuizHandlerObject(questionRequest.getQuestion(), null, null);
     }
 
     public static QuizHandlerObject convert(CheckRequest checkRequest) {
-        QuizHandlerObject quizHandler = new QuizHandlerObject();
-        quizHandler.setQuestionId(checkRequest.getQuestionId());
-        quizHandler.setUserAnswer(checkRequest.getUserAnswer());
-        return quizHandler;
+        return new QuizHandlerObject(null, checkRequest.getQuestionId(), checkRequest.getUserAnswer());
     }
 }

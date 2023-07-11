@@ -38,9 +38,7 @@ public class TestSetup extends MongoTestSetup {
     }
 
     protected QuestionRequest buildQuestionRequest(String question) {
-        QuestionRequest questionRequest = new QuestionRequest();
-        questionRequest.setQuestion(question);
-        return questionRequest;
+        return new QuestionRequest(question);
     }
 
     protected QuestionObject buildQuestionObject(String content) {
@@ -70,23 +68,14 @@ public class TestSetup extends MongoTestSetup {
     }
 
     protected QuizHandlerObject buildQuizHandler(String question) {
-        QuizHandlerObject quizHandler = new QuizHandlerObject();
-        quizHandler.setQuestion(question);
-        return quizHandler;
+        return new QuizHandlerObject(question, null, null);
     }
 
     protected QuizHandlerObject buildQuizHandler(String question, long questionId, String userAnswer) {
-        QuizHandlerObject quizHandler = new QuizHandlerObject();
-        quizHandler.setQuestion(question);
-        quizHandler.setQuestionId(questionId);
-        quizHandler.setUserAnswer(userAnswer);
-        return quizHandler;
+        return new QuizHandlerObject(question, questionId, userAnswer);
     }
 
     protected CheckRequest buildCheckRequest(long questionId, String userAnswer) {
-        CheckRequest checkRequest = new CheckRequest();
-        checkRequest.setQuestionId(questionId);
-        checkRequest.setUserAnswer(userAnswer);
-        return checkRequest;
+        return new CheckRequest(questionId, userAnswer);
     }
 }
