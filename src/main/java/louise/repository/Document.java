@@ -12,8 +12,6 @@ import org.springframework.data.mongodb.core.index.Indexed;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Document {
-
-    //    @MongoId(FieldType.TIMESTAMP)
     @Id
     private long id;
     @Indexed(unique = true)

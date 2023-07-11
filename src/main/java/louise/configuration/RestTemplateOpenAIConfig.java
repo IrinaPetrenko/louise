@@ -1,16 +1,16 @@
 package louise.configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
+@RequiredArgsConstructor
 public class RestTemplateOpenAIConfig {
 
-    @Autowired
-    private ChatGptProps chatGptProps;
+    private final ChatGptProps chatGptProps;
 
     @Bean
     @Qualifier("openaiRestTemplate")

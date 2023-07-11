@@ -13,13 +13,13 @@ import java.util.List;
 
 @SpringBootTest
 @Slf4j
-public class RepositoryFactoryTest extends MongoTestSetup {
+public class DocumentServiceTest extends MongoTestSetup {
 
     @Autowired
     QuizRepository quizRepository;
 
     @Autowired
-    RepositoryFactory repositoryFactory;
+    DocumentService documentService;
 
     @AfterEach
     public void cleanUp() {
@@ -30,7 +30,7 @@ public class RepositoryFactoryTest extends MongoTestSetup {
     public void testCheckQuizAlreadyExists() {
         String question = "test";
 
-        Assertions.assertDoesNotThrow(() -> repositoryFactory.checkQuizAlreadyExists(question));
+        Assertions.assertDoesNotThrow(() -> documentService.existsBy(question));
     }
 
     @Test
@@ -40,7 +40,7 @@ public class RepositoryFactoryTest extends MongoTestSetup {
 
         quizRepository.save(new Document(id, question, null));
 
-        Assertions.assertThrows(QuestionException.class, () -> repositoryFactory.checkQuizAlreadyExists(question));
+        Assertions.assertThrows(QuestionException.class, () -> documentService.existsBy(question));
     }
 
     @Test
@@ -53,14 +53,14 @@ public class RepositoryFactoryTest extends MongoTestSetup {
         expectedDoc.setId(id);
 
         quizRepository.save(new Document(id, question, null));
-        Assertions.assertEquals(expectedDoc, repositoryFactory.checkAndGetQuiz(id));
+        Assertions.assertEquals(expectedDoc, documentService.findBy(id));
     }
 
     @Test
     public void testCheckAndGetQuizNotFound() {
         long id = 12345;
 
-        Assertions.assertThrows(QuestionException.class, () -> repositoryFactory.checkAndGetQuiz(id));
+        Assertions.assertThrows(QuestionException.class, () -> documentService.findBy(id));
     }
 
     @Test
@@ -68,9 +68,9 @@ public class RepositoryFactoryTest extends MongoTestSetup {
         String question = "test Q";
         String answer = "test Answer";
 
-        repositoryFactory.save(question, answer);
+        documentService.save(question, answer);
 
-        Document actual = repositoryFactory.findAll().get(0);
+        Document actual = documentService.findAll().get(0);
         Assertions.assertEquals(question, actual.getQuestion());
         Assertions.assertEquals(answer, actual.getAnswer());
     }
@@ -80,9 +80,9 @@ public class RepositoryFactoryTest extends MongoTestSetup {
         String question = "test Q";
         String answer = "";
 
-        repositoryFactory.save(question, answer);
+        documentService.save(question, answer);
 
-        Document actual = repositoryFactory.findAll().get(0);
+        Document actual = documentService.findAll().get(0);
         Assertions.assertEquals(question, actual.getQuestion());
         Assertions.assertEquals(answer, actual.getAnswer());
     }
@@ -93,10 +93,10 @@ public class RepositoryFactoryTest extends MongoTestSetup {
         long id = 12345;
 
         quizRepository.save(new Document(id, question, null));
-        List<Document> documents = repositoryFactory.findAll();
+        List<Document> documents = documentService.findAll();
         Assertions.assertEquals(1, documents.size());
-        repositoryFactory.delete(id);
-        Assertions.assertTrue(repositoryFactory.findAll().isEmpty());
+        documentService.delete(id);
+        Assertions.assertTrue(documentService.findAll().isEmpty());
     }
 
     @Test
@@ -110,10 +110,10 @@ public class RepositoryFactoryTest extends MongoTestSetup {
 
         quizRepository.save(doc1);
         quizRepository.save(doc2);
-        List<Document> documents = repositoryFactory.findAll();
+        List<Document> documents = documentService.findAll();
         Assertions.assertEquals(2, documents.size());
-        repositoryFactory.delete(id1);
-        List<Document> actualDocuments = repositoryFactory.findAll();
+        documentService.delete(id1);
+        List<Document> actualDocuments = documentService.findAll();
         Assertions.assertEquals(doc2, actualDocuments.get(0));
     }
 
@@ -123,14 +123,14 @@ public class RepositoryFactoryTest extends MongoTestSetup {
         long id1 = 12345;
         Document doc1 = new Document(id1, question1, null);
         quizRepository.save(doc1);
-        Assertions.assertEquals(1, repositoryFactory.findAll().size());
-        repositoryFactory.delete(9999);
-        Assertions.assertEquals(1, repositoryFactory.findAll().size());
+        Assertions.assertEquals(1, documentService.findAll().size());
+        documentService.delete(9999);
+        Assertions.assertEquals(1, documentService.findAll().size());
     }
 
     @Test
     public void testFindAllOnEmptyDb() {
-        Assertions.assertTrue(repositoryFactory.findAll().isEmpty());
+        Assertions.assertTrue(documentService.findAll().isEmpty());
     }
 
     @Test
@@ -139,8 +139,8 @@ public class RepositoryFactoryTest extends MongoTestSetup {
         long id1 = 12345;
         Document doc1 = new Document(id1, question1, null);
         quizRepository.save(doc1);
-        Assertions.assertEquals(1, repositoryFactory.findAll().size());
-        Assertions.assertEquals(doc1, repositoryFactory.findAll().get(0));
+        Assertions.assertEquals(1, documentService.findAll().size());
+        Assertions.assertEquals(doc1, documentService.findAll().get(0));
     }
 
     @Test
@@ -154,9 +154,9 @@ public class RepositoryFactoryTest extends MongoTestSetup {
 
         quizRepository.save(doc1);
         quizRepository.save(doc2);
-        Assertions.assertEquals(2, repositoryFactory.findAll().size());
-        Assertions.assertEquals(doc1, repositoryFactory.checkAndGetQuiz(id1));
-        Assertions.assertEquals(doc2, repositoryFactory.checkAndGetQuiz(id2));
+        Assertions.assertEquals(2, documentService.findAll().size());
+        Assertions.assertEquals(doc1, documentService.findBy(id1));
+        Assertions.assertEquals(doc2, documentService.findBy(id2));
     }
 
     @Test
@@ -166,12 +166,12 @@ public class RepositoryFactoryTest extends MongoTestSetup {
         Document doc1 = new Document(id1, question1, null);
         quizRepository.save(doc1);
 
-        Assertions.assertEquals(doc1, repositoryFactory.getRandom());
+        Assertions.assertEquals(doc1, documentService.getRandom());
     }
 
     @Test
     public void testGetRandomWithEmptyRepo() {
-        Assertions.assertThrows(QuestionException.class, () -> repositoryFactory.getRandom());
+        Assertions.assertThrows(QuestionException.class, () -> documentService.getRandom());
     }
 
     @Test
@@ -186,9 +186,9 @@ public class RepositoryFactoryTest extends MongoTestSetup {
         quizRepository.save(doc1);
         quizRepository.save(doc2);
 
-        Document random = repositoryFactory.getRandom();
+        Document random = documentService.getRandom();
         Assertions.assertTrue(doc1.equals(random) || doc2.equals(random));
-        Document random1 = repositoryFactory.getRandom();
+        Document random1 = documentService.getRandom();
         Assertions.assertTrue(doc1.equals(random1) || doc2.equals(random1));
     }
 }

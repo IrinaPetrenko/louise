@@ -6,7 +6,7 @@ import louise.controller.models.CheckRequest;
 import louise.controller.models.CheckResponse;
 import louise.controller.models.QuestionRequest;
 import louise.controller.models.QuizResponse;
-import louise.domain.GptFactory;
+import louise.domain.GptHandler;
 import louise.exceptions.CustomException;
 import louise.exceptions.QuestionException;
 import louise.repository.QuizRepository;
@@ -41,7 +41,7 @@ public class QuizControllerTest extends TestSetup {
     private MockMvc mockMvc;
 
     @MockBean
-    private GptFactory gptFactory;
+    private GptHandler gptHandler;
 
     @Autowired
     public QuizRepository quizRepository;
@@ -59,7 +59,7 @@ public class QuizControllerTest extends TestSetup {
         String question = "Is this a controller test?";
         String answer = "Yes, it is.";
 
-        doAnswer(invocationOnMock -> answer).when(gptFactory).request(any());
+        doAnswer(invocationOnMock -> answer).when(gptHandler).request(any());
 
         QuestionRequest request = new QuestionRequest();
         request.setQuestion(question);
@@ -222,7 +222,7 @@ public class QuizControllerTest extends TestSetup {
         String question = "Is this a controller test?" + random.nextInt();
         String answer = "Yes, it is." + random.nextInt();
 
-        doAnswer(invocationOnMock -> answer).when(gptFactory).request(any());
+        doAnswer(invocationOnMock -> answer).when(gptHandler).request(any());
 
         QuestionRequest request = new QuestionRequest();
         request.setQuestion(question);

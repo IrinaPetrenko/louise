@@ -5,6 +5,7 @@ import louise.domain.entities.Quiz;
 import java.util.List;
 
 public interface QuizInterface<T, Y> {
+
     Quiz getRandom();
 
     Quiz create(T questionRequest);
@@ -14,4 +15,8 @@ public interface QuizInterface<T, Y> {
     List<Quiz> getAll();
 
     String checkAnswer(Y userAnswer);
+
+    default Languages getLanguage() {
+        return Languages.DEFAULT;
+    }
 }

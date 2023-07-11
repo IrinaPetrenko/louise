@@ -3,7 +3,7 @@ package louise.domain;
 import louise.TestSetup;
 import louise.exceptions.QuestionException;
 import louise.repository.Document;
-import louise.repository.RepositoryFactory;
+import louise.repository.DocumentService;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,14 +19,14 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 
 @ExtendWith(MockitoExtension.class)
-public class GptFactoryTest extends TestSetup {
+public class GptHelperTest extends TestSetup {
 
     private static final String url = "https://test";
     private static final String testQuestion = "test question";
     private static final String testAnswer = "test answer";
 
     @Mock
-    private RepositoryFactory repositoryFactory;
+    private DocumentService documentService;
 
     @Mock
     private RestTemplate restTemplate = new RestTemplate();
@@ -35,7 +35,7 @@ public class GptFactoryTest extends TestSetup {
     private GptQuestionObjectConverter gptQuestionObjectConverter = new GptQuestionObjectConverter();
 
     @InjectMocks
-    private GptFactory gptFactory = new GptFactory();
+    private GptHandler gptHandler;
 
     @BeforeEach
     public void prep() {
@@ -49,7 +49,7 @@ public class GptFactoryTest extends TestSetup {
         reset(restTemplate);
         reset(gptQuestionObjectConverter);
         reset(mockGptProps);
-        reset(repositoryFactory);
+        reset(documentService);
     }
 
     @Test
@@ -57,7 +57,7 @@ public class GptFactoryTest extends TestSetup {
         doAnswer(invocation -> buildAnswerObject(testAnswer)).when(restTemplate).postForObject(eq(url),
                 any(), any());
 
-        String actualAnswer = gptFactory.request(buildQuizHandler(testQuestion));
+        String actualAnswer = gptHandler.request(buildQuizHandler(testQuestion));
         Assert.assertEquals(testAnswer, actualAnswer);
     }
 
@@ -66,7 +66,7 @@ public class GptFactoryTest extends TestSetup {
         doAnswer(invocation -> buildAnswerObject("")).when(restTemplate).postForObject(eq(url),
                 any(), any());
 
-        String actualAnswer = gptFactory.request(buildQuizHandler(testQuestion));
+        String actualAnswer = gptHandler.request(buildQuizHandler(testQuestion));
         Assert.assertEquals("", actualAnswer);
     }
 
@@ -78,9 +78,9 @@ public class GptFactoryTest extends TestSetup {
 
         doAnswer(invocation -> buildAnswerObject(expectedGptAnswer)).when(restTemplate).postForObject(eq(url),
                 any(), any());
-        doAnswer(invocation -> new Document(quizId, testQuestion, testAnswer)).when(repositoryFactory).checkAndGetQuiz(quizId);
+        doAnswer(invocation -> new Document(quizId, testQuestion, testAnswer)).when(documentService).findBy(quizId);
 
-        String actualAnswer = gptFactory.request(buildQuizHandler(testQuestion, quizId, userAnswer));
+        String actualAnswer = gptHandler.request(buildQuizHandler(testQuestion, quizId, userAnswer));
         Assert.assertEquals(expectedGptAnswer, actualAnswer);
     }
 
@@ -88,10 +88,10 @@ public class GptFactoryTest extends TestSetup {
     public void testQuestionWithUserAnswerQuizNotFound() {
         doAnswer(invocation -> {
             throw new QuestionException("test exception");
-        }).when(repositoryFactory).checkAndGetQuiz((long) 123456);
+        }).when(documentService).findBy((long) 123456);
 
         Assert.assertThrows(QuestionException.class, () -> {
-            gptFactory.request(buildQuizHandler(testQuestion, 123456, "Java is cool"));
+            gptHandler.request(buildQuizHandler(testQuestion, 123456, "Java is cool"));
         });
     }
 
@@ -99,9 +99,9 @@ public class GptFactoryTest extends TestSetup {
     public void testQuestionWithUserAnswerAndEmptyGptRequest() {
         doAnswer(invocation -> buildAnswerObject("")).when(restTemplate).postForObject(eq(url),
                 any(), any());
-        doAnswer(invocation -> new Document(123456, testQuestion, testAnswer)).when(repositoryFactory).checkAndGetQuiz(123456);
+        doAnswer(invocation -> new Document(123456, testQuestion, testAnswer)).when(documentService).findBy(123456);
 
-        String actualAnswer = gptFactory.request(buildQuizHandler(testQuestion, 123456, "Java is cool"));
+        String actualAnswer = gptHandler.request(buildQuizHandler(testQuestion, 123456, "Java is cool"));
         Assert.assertEquals("", actualAnswer);
     }
 }

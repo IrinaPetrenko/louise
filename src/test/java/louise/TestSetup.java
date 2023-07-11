@@ -9,8 +9,8 @@ import louise.domain.chatGpt.Choice;
 import louise.domain.chatGpt.Message;
 import louise.domain.chatGpt.QuestionObject;
 import louise.handler.entity.QuizHandlerObject;
+import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
@@ -21,7 +21,7 @@ public class TestSetup extends MongoTestSetup {
     @Mock
     public ChatGptProps mockGptProps;
 
-    @BeforeEach
+    @Before
     public void prep() {
         log.info("Preparing mock for Gpt...");
         Mockito.when(mockGptProps.getModel()).thenReturn("test-gpt-model");

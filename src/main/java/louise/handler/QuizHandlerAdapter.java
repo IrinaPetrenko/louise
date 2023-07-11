@@ -7,12 +7,12 @@ import louise.handler.converters.QuizHandlerConverter;
 
 import java.util.List;
 
-public class QuizHandlerDecorator implements QuizInterface<QuestionRequest, CheckRequest> {
+public class QuizHandlerAdapter implements QuizInterface<QuestionRequest, CheckRequest> {
 
 
     protected QuizInterface quizHandler;
 
-    public QuizHandlerDecorator(QuizInterface quizHandler) {
+    public QuizHandlerAdapter(QuizInterface quizHandler) {
         this.quizHandler = quizHandler;
     }
 

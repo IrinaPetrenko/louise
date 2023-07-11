@@ -1,8 +1,8 @@
 package louise.repository;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import louise.exceptions.QuestionException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,17 +11,11 @@ import java.util.Random;
 
 @Service
 @Slf4j
-public class RepositoryFactory {
+@RequiredArgsConstructor
+public class DocumentService {
     private final DocumentConverter documentConverter;
     private final QuizRepository quizRepository;
-
-
-    public RepositoryFactory(@Autowired DocumentConverter documentConverter, @Autowired QuizRepository quizRepository) {
-        this.documentConverter = documentConverter;
-        this.quizRepository = quizRepository;
-    }
-
-    public void checkQuizAlreadyExists(String question) {
+    public void existsBy(String question) {
         Optional.ofNullable(quizRepository.findByQuestion(question)).ifPresentOrElse(
                 (value) -> {
                     throw new QuestionException("Such question already exists");
@@ -30,7 +24,7 @@ public class RepositoryFactory {
         );
     }
 
-    public Document checkAndGetQuiz(long id) {
+    public Document findBy(long id) {
         return quizRepository.findById(id).orElseThrow(() -> new QuestionException("Quiz not found. Check provided id"));
     }
 
