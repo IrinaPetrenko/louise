@@ -6,6 +6,7 @@ You can add any new question to the quiz, select random quiz and test your answe
 
 *To start the application localy:*
 - add your cht-gpt credentials to env_vars (https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key, format: ```Bearer <generated-api-key>```);
+- create loval db volume - run ```docker volume create mongo-data```
 - run ```docker compose build```;
 - run ```docker compose up```;
 
