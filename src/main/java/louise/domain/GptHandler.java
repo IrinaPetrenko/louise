@@ -20,6 +20,9 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+/**
+ * TODO:Why the handler is in the domain package?
+ */
 public class GptHandler {
 
     private final DocumentService documentService;

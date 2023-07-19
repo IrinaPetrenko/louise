@@ -47,4 +47,7 @@ POST http://127.0.0.1:8080/java/quiz/answer
 }
 ```
 
+### TODO
+- Add C4 Level Diagrams to show your application architecture
+- Add flow diagrams to show how your application works
 
