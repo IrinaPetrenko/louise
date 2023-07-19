@@ -36,6 +36,9 @@ public class JavaQuizHandler implements QuizInterface<QuizHandlerObject, QuizHan
     }
 
     @Override
+    /**
+     * TODO: Can we refactor this method to have just delete? for example documentService.delete(id)
+     */
     public void delete(long id) {
         documentService.findBy(id);
         documentService.delete(id);

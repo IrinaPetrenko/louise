@@ -4,9 +4,9 @@ Louise is a Pet project to train programing language quizes (currently only *jav
 
 You can add any new question to the quiz, select random quiz and test your answer on it.
 
-*To start the application localy:*
+*To start the application locally:*
 - add your cht-gpt credentials to env_vars (https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key, format: ```Bearer <generated-api-key>```);
-- create loval db volume - run ```docker volume create mongo-data```
+- create local db volume - run ```docker volume create mongo-data```
 - run ```docker compose build```;
 - run ```docker compose up```;
 
@@ -23,7 +23,7 @@ POST http://127.0.0.1:8080/java/quiz/new
 }
 ```
 
-**Get all exisintg quizes**
+**Get all existing quizes**
 ```
 GET http://127.0.0.1:8080/java/quiz/all
 ```
@@ -47,4 +47,7 @@ POST http://127.0.0.1:8080/java/quiz/answer
 }
 ```
 
+### TODO
+- Add C4 Level Diagrams to show your application architecture
+- Add flow diagrams to show how your application works
 

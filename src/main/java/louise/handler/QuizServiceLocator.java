@@ -8,6 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * TODO: is that a component or a service ?
+ * the class is annotated with @Component, but the name is QuizServiceLocator
+ */
 @Component
 public class QuizServiceLocator {
 

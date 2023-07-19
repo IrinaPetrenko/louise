@@ -18,5 +18,4 @@ public class Document {
     @NotEmpty
     private String question;
     private String answer;
-
 }

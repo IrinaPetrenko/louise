@@ -13,8 +13,16 @@ import java.util.Random;
 @Slf4j
 @RequiredArgsConstructor
 public class DocumentService {
+    /**
+     * TODO: Why Document service is in the repository package instead of service package?
+     * TODO: How are the dependencies injected?
+     */
     private final DocumentConverter documentConverter;
     private final QuizRepository quizRepository;
+
+    /**
+     * Why Exists by throws an exception? why not to return a boolean and leave it to the caller to decide what to do?
+     */
     public void existsBy(String question) {
         Optional.ofNullable(quizRepository.findByQuestion(question)).ifPresentOrElse(
                 (value) -> {
@@ -42,6 +50,10 @@ public class DocumentService {
         return quizRepository.findAll();
     }
 
+    /**
+     * TODO: What if we have 100,000 Records ? How can we improve this method?
+     * Hint: checkout $sample
+     */
     public Document getRandom() {
         List<Document> documents = findAll();
         if (documents.isEmpty()) throw new QuestionException("Repository is empty. No Quiz found.");
