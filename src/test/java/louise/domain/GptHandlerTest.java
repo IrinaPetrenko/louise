@@ -1,7 +1,7 @@
 package louise.domain;
 
 import louise.TestSetup;
-import louise.exceptions.ChatGptConnectionException;
+import louise.exceptions.ChatGptException;
 import louise.exceptions.QuestionException;
 import louise.repository.Document;
 import louise.repository.DocumentService;
@@ -58,7 +58,7 @@ public class GptHandlerTest extends TestSetup {
     public void testException() {
         when(restTemplate.postForObject(eq(url), any(), any())).thenThrow(
                 new RestClientResponseException("this is test", 500, "could not connect", null, null, null));
-        Assertions.assertThrows(ChatGptConnectionException.class, () -> gptHandler.request(buildQuizHandler(testQuestion)));
+        Assertions.assertThrows(ChatGptException.class, () -> gptHandler.request(buildQuizHandler(testQuestion)));
     }
 
     @Test
