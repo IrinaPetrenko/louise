@@ -1,25 +1,27 @@
 package louise.domain;
 
 import louise.TestSetup;
+import louise.exceptions.ChatGptConnectionException;
 import louise.exceptions.QuestionException;
 import louise.repository.Document;
 import louise.repository.DocumentService;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class GptHelperTest extends TestSetup {
+public class GptHandlerTest extends TestSetup {
 
     private static final String url = "https://test";
     private static final String testQuestion = "test question";
@@ -50,6 +52,13 @@ public class GptHelperTest extends TestSetup {
         reset(gptQuestionObjectConverter);
         reset(mockGptProps);
         reset(documentService);
+    }
+
+    @Test
+    public void testException() {
+        when(restTemplate.postForObject(eq(url), any(), any())).thenThrow(
+                new RestClientResponseException("this is test", 500, "could not connect", null, null, null));
+        Assertions.assertThrows(ChatGptConnectionException.class, () -> gptHandler.request(buildQuizHandler(testQuestion)));
     }
 
     @Test
