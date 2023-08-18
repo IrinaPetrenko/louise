@@ -56,7 +56,6 @@ public class QuizControllerTest extends TestSetup {
         quizRepository.deleteAll();
     }
 
-
     @SneakyThrows
     @Test
     public void testCreateNewQuiz() {
