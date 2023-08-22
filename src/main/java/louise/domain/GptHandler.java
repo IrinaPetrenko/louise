@@ -32,7 +32,7 @@ public class GptHandler {
         if (request.getUserAnswer() != null) {
             gptRequest = prepareRequest(request.getQuestionId(), request.getUserAnswer());
         } else {
-            gptRequest = gptQuestionObjectConverter.convert(request.getQuestion(), connectionProps);
+            gptRequest = gptQuestionObjectConverter.convert(request.getQuestion());
         }
         return execute(gptRequest);
     }
@@ -40,8 +40,8 @@ public class GptHandler {
     private String execute(QuestionObject request) {
         try {
             AnswerObject answer = openaiRestTemplate.postForObject(connectionProps.getUrl(), request, AnswerObject.class);
-            Optional.ofNullable(answer.getChoices()).orElseThrow(NoSuchElementException::new);
-            return answer.getChoices().get(0).getMessage().getContent();
+            Optional.ofNullable(answer.choices()).orElseThrow(NoSuchElementException::new);
+            return answer.choices().get(0).message().getContent();
         } catch (RestClientResponseException exception) {
             throw new ChatGptException(exception);
         }
@@ -51,7 +51,7 @@ public class GptHandler {
     private QuestionObject prepareRequest(long quizId, String userAnswer) {
         Document quiz = documentService.findBy(quizId);
         String message = prepMessage(quiz.getQuestion(), quiz.getAnswer(), userAnswer);
-        return gptQuestionObjectConverter.convert(message, connectionProps);
+        return gptQuestionObjectConverter.convert(message);
     }
 
     private String prepMessage(String question, String answer, String userAnswer) {

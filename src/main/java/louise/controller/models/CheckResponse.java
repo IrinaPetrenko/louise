@@ -1,13 +1,5 @@
 package louise.controller.models;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Value;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Value
-@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-@AllArgsConstructor
-public class CheckResponse {
-    String response;
-}
+public record CheckResponse(@JsonProperty("response") String response) {}

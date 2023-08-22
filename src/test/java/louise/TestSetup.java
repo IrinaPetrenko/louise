@@ -9,32 +9,42 @@ import louise.domain.chatGpt.Choice;
 import louise.domain.chatGpt.Message;
 import louise.domain.chatGpt.QuestionObject;
 import louise.handler.entity.QuizHandlerObject;
-import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
 @Slf4j
+@ExtendWith(MockitoExtension.class)
 public class TestSetup extends MongoTestSetup {
     @Mock
     public ChatGptProps mockGptProps;
 
-    @Before
-    public void prep() {
+    private MockedStatic<ChatGptProps> chatGptPropsMockedStatic;
+
+    @BeforeEach
+    public void prepareGptMock() {
         log.info("Preparing mock for Gpt...");
         Mockito.when(mockGptProps.getModel()).thenReturn("test-gpt-model");
         Mockito.when(mockGptProps.getTemperature()).thenReturn(0.7);
         Mockito.when(mockGptProps.getMessageRole()).thenReturn("test");
         Mockito.when(mockGptProps.getUrl()).thenReturn("https://api.openai.com/v1/chat/completions");
         Mockito.when(mockGptProps.getKey()).thenReturn("test-key");
+
+        chatGptPropsMockedStatic = Mockito.mockStatic(ChatGptProps.class);
+        chatGptPropsMockedStatic.when(ChatGptProps::getInstance).thenReturn(mockGptProps);
     }
 
     @AfterEach
-    public void wrap() {
+    public void resetGptMocks() {
         log.info("Resetting mock for Gpt...");
         Mockito.reset(mockGptProps);
+        chatGptPropsMockedStatic.close();
     }
 
     protected QuestionRequest buildQuestionRequest(String question) {
@@ -44,7 +54,7 @@ public class TestSetup extends MongoTestSetup {
     protected QuestionObject buildQuestionObject(String content) {
         return new QuestionObject(
                 mockGptProps.getModel(),
-                List.of(new Message(content, mockGptProps)),
+                List.of(new Message(content)),
                 mockGptProps.getTemperature()
         );
     }
@@ -61,7 +71,7 @@ public class TestSetup extends MongoTestSetup {
 
     protected Choice buildChoice(String answer) {
         return new Choice(
-                new Message(answer, mockGptProps),
+                new Message(answer),
                 "test",
                 7
         );

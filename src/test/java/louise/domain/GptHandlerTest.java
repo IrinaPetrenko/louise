@@ -41,7 +41,7 @@ public class GptHandlerTest extends TestSetup {
 
     @BeforeEach
     public void prep() {
-        doAnswer(invocation -> buildQuestionObject(testQuestion)).when(gptQuestionObjectConverter).convert(anyString(), eq(mockGptProps));
+        doAnswer(invocation -> buildQuestionObject(testQuestion)).when(gptQuestionObjectConverter).convert(anyString());
 
         doAnswer(invocation -> url).when(mockGptProps).getUrl();
     }

@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
@@ -16,6 +17,7 @@ import java.util.stream.Stream;
 @ExtendWith(MockitoExtension.class)
 public class GptQuestionObjectConverterTest extends TestSetup {
 
+    @InjectMocks
     private GptQuestionObjectConverter gptQuestionObjectConverter = new GptQuestionObjectConverter();
 
     @TestFactory
@@ -34,7 +36,7 @@ public class GptQuestionObjectConverterTest extends TestSetup {
                 .map(dom -> DynamicTest.dynamicTest("testing converter",
                         () -> {
                             int i = inputList.indexOf(dom);
-                            Assert.assertEquals(gptQuestionObjectConverter.convert(dom, mockGptProps), outputList.get(i));
+                            Assert.assertEquals(gptQuestionObjectConverter.convert(dom), outputList.get(i));
                         }));
     }
 
@@ -54,7 +56,7 @@ public class GptQuestionObjectConverterTest extends TestSetup {
                 .map(dom -> DynamicTest.dynamicTest("testing converter",
                         () -> {
                             int i = inputList.indexOf(dom);
-                            Assert.assertEquals(gptQuestionObjectConverter.convert(dom, mockGptProps), outputList.get(i));
+                            Assert.assertEquals(gptQuestionObjectConverter.convert(dom), outputList.get(i));
                         }));
     }
 }

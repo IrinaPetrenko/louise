@@ -1,15 +1,8 @@
 package louise.controller.models;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Value;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Value
-@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-@AllArgsConstructor
-public class QuizResponse {
-    long id;
-    String question;
-    String answer;
+public record QuizResponse(@JsonProperty("id") long id,
+                           @JsonProperty("question") String question,
+                           @JsonProperty("answer") String answer) {
 }

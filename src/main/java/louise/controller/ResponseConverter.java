@@ -12,7 +12,7 @@ import java.util.List;
 public class ResponseConverter {
 
     public QuizResponse convert(Quiz quiz) {
-        return new QuizResponse(quiz.getId(), quiz.getQuestion(), quiz.getAnswer());
+        return new QuizResponse(quiz.id(), quiz.question(), quiz.answer());
     }
 
     public QuizResponse convert(Document document) {

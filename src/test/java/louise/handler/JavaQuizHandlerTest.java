@@ -46,15 +46,15 @@ public class JavaQuizHandlerTest extends MongoTestSetup {
         doAnswer(invocationOnMock -> expectedAnswer).when(gptHandler).request(quiz);
 
         Quiz actualQuiz = javaQuizHandler.create(quiz);
-        Assertions.assertEquals(expectedQuestion, actualQuiz.getQuestion());
-        Assertions.assertEquals(expectedAnswer, actualQuiz.getAnswer());
+        Assertions.assertEquals(expectedQuestion, actualQuiz.question());
+        Assertions.assertEquals(expectedAnswer, actualQuiz.answer());
     }
 
     @Test
     public void testCreatingDuplicateQuestion() {
         Quiz createdQuiz = createQuiz();
 
-        QuizHandlerObject quiz = new QuizHandlerObject(createdQuiz.getQuestion(), null, null);
+        QuizHandlerObject quiz = new QuizHandlerObject(createdQuiz.question(), null, null);
 
         Assertions.assertThrows(QuestionException.class, () -> {
             javaQuizHandler.create(quiz);
@@ -64,7 +64,7 @@ public class JavaQuizHandlerTest extends MongoTestSetup {
     @Test
     public void testDeleteQuiz() {
         Quiz createdQuiz = createQuiz();
-        javaQuizHandler.delete(createdQuiz.getId());
+        javaQuizHandler.delete(createdQuiz.id());
         Assertions.assertEquals(0, javaQuizHandler.getAll().size());
     }
 
@@ -83,9 +83,9 @@ public class JavaQuizHandlerTest extends MongoTestSetup {
         List<Quiz> actualQuiz = javaQuizHandler.getAll();
         Assertions.assertEquals(2, actualQuiz.size());
 
-        List<String> actualQuestions = actualQuiz.stream().map(Quiz::getQuestion).toList();
-        Assertions.assertTrue(actualQuestions.contains(createdQuiz1.getQuestion()));
-        Assertions.assertTrue(actualQuestions.contains(createdQuiz2.getQuestion()));
+        List<String> actualQuestions = actualQuiz.stream().map(Quiz::question).toList();
+        Assertions.assertTrue(actualQuestions.contains(createdQuiz1.question()));
+        Assertions.assertTrue(actualQuestions.contains(createdQuiz2.question()));
     }
 
     @Test
@@ -94,7 +94,7 @@ public class JavaQuizHandlerTest extends MongoTestSetup {
 
         String userAnswer = "This is mock User answer";
         String gptAnswer = "This is Mock. Test User answer is correct";
-        QuizHandlerObject checkQuiz = new QuizHandlerObject(createdQuiz.getQuestion(), createdQuiz.getId(), userAnswer);
+        QuizHandlerObject checkQuiz = new QuizHandlerObject(createdQuiz.question(), createdQuiz.id(), userAnswer);
 
         doAnswer(invocationOnMock -> gptAnswer).when(gptHandler).request(checkQuiz);
         Assertions.assertEquals(gptAnswer, javaQuizHandler.checkAnswer(checkQuiz));

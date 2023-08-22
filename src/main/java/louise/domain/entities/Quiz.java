@@ -1,16 +1,11 @@
 package louise.domain.entities;
 
-import lombok.*;
+import lombok.NonNull;
 
-@Value
-//@NoArgsConstructor
-public class Quiz {
-    long id;
-    @NonNull
-    String question;
-
-    String answer;
-
-    String userAnswer;
-
+public record Quiz(long id,
+                   @NonNull
+                   String question,
+                   String answer,
+                   String userAnswer
+) {
 }

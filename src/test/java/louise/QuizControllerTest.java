@@ -75,8 +75,8 @@ public class QuizControllerTest extends TestSetup {
                 .andExpect(status().isOk())
                 .andExpect(result -> {
                     QuizResponse actualResponse = new ObjectMapper().readValue(result.getResponse().getContentAsString(), QuizResponse.class);
-                    Assertions.assertEquals(actualResponse.getQuestion(), expectedResponse.getQuestion());
-                    Assertions.assertEquals(actualResponse.getAnswer(), expectedResponse.getAnswer());
+                    Assertions.assertEquals(actualResponse.answer(), expectedResponse.answer());
+                    Assertions.assertEquals(actualResponse.question(), expectedResponse.question());
                 });
     }
 
@@ -128,7 +128,7 @@ public class QuizControllerTest extends TestSetup {
         QuizResponse createdQuiz = createQuiz();
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                        .delete(String.format("/java/quiz/%s", createdQuiz.getId()))
+                        .delete(String.format("/java/quiz/%s", createdQuiz.id()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(204));
 
@@ -201,13 +201,13 @@ public class QuizControllerTest extends TestSetup {
 
         this.mockMvc.perform(MockMvcRequestBuilders
                         .post("/java/quiz/answer")
-                        .content(new ObjectMapper().writeValueAsString(prepCheckRequest(createdQuiz.getId())))
+                        .content(new ObjectMapper().writeValueAsString(prepCheckRequest(createdQuiz.id())))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(result -> {
                     CheckResponse actualResponse = new ObjectMapper().readValue(result.getResponse().getContentAsString(),
                             CheckResponse.class);
-                    CheckResponse expectedResponse = new CheckResponse(createdQuiz.getAnswer());
+                    CheckResponse expectedResponse = new CheckResponse(createdQuiz.answer());
                     Assertions.assertEquals(expectedResponse, actualResponse);
                 });
     }
